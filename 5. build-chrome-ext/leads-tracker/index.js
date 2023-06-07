@@ -1,14 +1,25 @@
-/* function saveLead() {
-    console.log("Button Clicked from onclick element!")
-} */
 let myLeads = []
 const inputEl = document.querySelector("#input-el")
 const inputBtn = document.querySelector("#input-btn")
 const ulEl = document.querySelector("#ul-el")
+const deleteBtn = document.querySelector("#delete-btn")
+const leadsLocalStorage = JSON.parse(localStorage.getItem("myLeads"))
+
+if (leadsLocalStorage) {
+    myLeads = leadsLocalStorage
+    renderLeads()
+}
 
 inputBtn.addEventListener("click", function () {
     myLeads.push(inputEl.value)
     inputEl.value = ""
+    localStorage.setItem("myLeads", JSON.stringify(myLeads))
+    renderLeads()
+})
+
+deleteBtn.addEventListener("dblclick", function(){
+    localStorage.clear()
+    myLeads = []
     renderLeads()
 })
 
@@ -16,11 +27,9 @@ function renderLeads() {
     let listItems = ""
     for (i = 0; i < myLeads.length; i++) {
         listItems += 
-        `
-        <li>
+        `<li>
             <a href="${myLeads[i]}" target="_blank">${myLeads[i]}</a>
-        </li>
-        `
+        </li>`
     }
     ulEl.innerHTML = listItems
 }
@@ -59,5 +68,14 @@ syntax ini dapat dimasukkan kedalam function renderLeads
         ulEl.innerHTML = listItems
         ================================
 14. sebelumnya kita sudah membahas tentang cara lain untuk membuat list tag dengan append atau menggunakan innerHTML dan mengetik lalu merender tagnya secara manual, berikut adalah cara yang lebih 'versatile' yang dapat digunakan untuk membuat tag bahkan line code seperti kita mengetik dengan html, yaitu dengan menggunakan back tick (`) dan itu yang akan kita gunakan disini
-15. template string adalah menggunakan multiple line untuk membuat template yang akan di render pada html
+15. template strings/literals adalah menggunakan multiple line untuk membuat template yang akan di render pada html (dengan menulis literal line code yang diinginkan pada js)
+16. setelah itu walaupun aplikasi kita belum sepenuhnya selesai, dan masih ada beberapa fitur yang masih bisa kita tambahkan, kita akan mencoba deploy extension tersebut, pada file source learn javascript terdapat tambahan file icon.png dan manifest.json, copy file tersebut ke file leads-tracker. pada tahap ini kita akan membuka google chrome dan membuka chrome://extensions, lalu klik developer mode dan klik unpack load lalu pilih file leads-tracker nya, leads tracker pun terpasang pada browser kalian
+17. manifest.json (JavaScriptObjectNotations) disini digunakan untuk configure aplikasi leads tracker tersebut, manifest.json berisi tentangW metadata aplikasi itu sendiri, seperti nama, versi, actions, dll.
+    a. name berisi tentang nama aplikasi itu sendiri, google chrome akan memberikan nama berdasarkan metadata yang kita sediakan ini
+    b. version, sesuai dengan namanya menunjukkan versi berapa aplikasi yang kita develop tersebut
+    c. action, berfungsi sebagai inti dari konfigurasi dari aplikasi kita yang akan dijalankan ketika user membuka/klik aplikasi kita, dalam file manifest.json, terdapat action, default_popup, yaitu apa yang akan ditampilkan ketika file extension kita di buka, lalu default_icon, yaitu icon yang akan ditampilkan sebagai icon aplikasi kita.
+18. pada saat ini, Leads Tracker tidak bisa digunakan untuk menyimpan data dan akan hilang saat page di refresh
+19. localStorage -> Global Scope, merupakan storage yang berada pada memori loca, cukup primitif dan hanya bisa menyimpan string. kita akan menggunakan localStorage untuk menyimpan value yang ada pada list dari leads tracker, bahkan jika leads tracker nya di refresh atau di restart
+20.untuk 'mengakali' keterbatasan localStorage yang hanya dapat digunakan untuk menyimpan string, kita dapat menggunakan JSON.stringify, dan JSON.parse.
+21. JSON.stringify untuk merubah isi dari variable atau element menjadi string dan JSON.parse adalah perubahan tersebut. Dengan ini kita dapat menyimpan array dengan format string pada localStorage lalu merubahnya kembali ke array saat dibutuhkan pada komputasi js
 */
