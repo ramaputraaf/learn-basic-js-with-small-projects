@@ -3,36 +3,46 @@ const inputEl = document.querySelector("#input-el")
 const inputBtn = document.querySelector("#input-btn")
 const ulEl = document.querySelector("#ul-el")
 const deleteBtn = document.querySelector("#delete-btn")
+const tabBtn = document.querySelector("#save-btn")
 const leadsLocalStorage = JSON.parse(localStorage.getItem("myLeads"))
 
 if (leadsLocalStorage) {
     myLeads = leadsLocalStorage
-    renderLeads()
+    render(myLeads)
+}
+
+tabBtn.addEventListener("click", function () {
+    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+        myLeads.push(tabs[0].url)
+        localStorage.setItem("myLeads", JSON.stringify(myLeads))
+        render(myLeads)
+    })
+
+})
+
+function render(leads) {
+    let listItems = ""
+    for (i = 0; i < leads.length; i++) {
+        listItems +=
+            `<li>
+            <a href="${leads[i]}" target="_blank">${leads[i]}</a>
+        </li>`
+    }
+    ulEl.innerHTML = listItems
 }
 
 inputBtn.addEventListener("click", function () {
     myLeads.push(inputEl.value)
     inputEl.value = ""
     localStorage.setItem("myLeads", JSON.stringify(myLeads))
-    renderLeads()
+    render(myLeads)
 })
 
-deleteBtn.addEventListener("dblclick", function(){
+deleteBtn.addEventListener("dblclick", function () {
     localStorage.clear()
     myLeads = []
-    renderLeads()
+    render(myLeads)
 })
-
-function renderLeads() {
-    let listItems = ""
-    for (i = 0; i < myLeads.length; i++) {
-        listItems += 
-        `<li>
-            <a href="${myLeads[i]}" target="_blank">${myLeads[i]}</a>
-        </li>`
-    }
-    ulEl.innerHTML = listItems
-}
 
 /* 
 1. addEventListener berfungsi sama dengan onclick element pada html, bedanya adalah addEventListener merupakan element dari javascript sendiri untuk merekam event yang terjadi pada tag/element dengan identitas tertentu yang sudah di berikan, disini addEventListener merekam event yang terjadi pada button input-btn
@@ -78,4 +88,5 @@ syntax ini dapat dimasukkan kedalam function renderLeads
 19. localStorage -> Global Scope, merupakan storage yang berada pada memori loca, cukup primitif dan hanya bisa menyimpan string. kita akan menggunakan localStorage untuk menyimpan value yang ada pada list dari leads tracker, bahkan jika leads tracker nya di refresh atau di restart
 20.untuk 'mengakali' keterbatasan localStorage yang hanya dapat digunakan untuk menyimpan string, kita dapat menggunakan JSON.stringify, dan JSON.parse.
 21. JSON.stringify untuk merubah isi dari variable atau element menjadi string dan JSON.parse adalah perubahan tersebut. Dengan ini kita dapat menyimpan array dengan format string pada localStorage lalu merubahnya kembali ke array saat dibutuhkan pada komputasi js
+22. 
 */

@@ -17,7 +17,13 @@ input {
     padding: 10px;
 }
 
+div {
+    display: flex;
+    gap: 5px;
+}
+
 button {
+    width: 140px;
     background-color: #5f9341;
     border: solid 1px #5f9341;
     padding: 10px 20px;
