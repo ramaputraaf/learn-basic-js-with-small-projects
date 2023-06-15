@@ -11,15 +11,6 @@ if (leadsLocalStorage) {
     render(myLeads)
 }
 
-tabBtn.addEventListener("click", function () {
-    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-        myLeads.push(tabs[0].url)
-        localStorage.setItem("myLeads", JSON.stringify(myLeads))
-        render(myLeads)
-    })
-
-})
-
 function render(leads) {
     let listItems = ""
     for (i = 0; i < leads.length; i++) {
@@ -30,6 +21,14 @@ function render(leads) {
     }
     ulEl.innerHTML = listItems
 }
+
+tabBtn.addEventListener("click", function () {
+    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+        myLeads.push(tabs[0].url)
+        localStorage.setItem("myLeads", JSON.stringify(myLeads))
+        render(myLeads)
+    })
+})
 
 inputBtn.addEventListener("click", function () {
     myLeads.push(inputEl.value)
@@ -89,4 +88,22 @@ syntax ini dapat dimasukkan kedalam function renderLeads
 20.untuk 'mengakali' keterbatasan localStorage yang hanya dapat digunakan untuk menyimpan string, kita dapat menggunakan JSON.stringify, dan JSON.parse.
 21. JSON.stringify untuk merubah isi dari variable atau element menjadi string dan JSON.parse adalah perubahan tersebut. Dengan ini kita dapat menyimpan array dengan format string pada localStorage lalu merubahnya kembali ke array saat dibutuhkan pada komputasi js
 22. 
+*/
+
+
+/* 
+notes:
+1. pada fungsi loop, dapat menggunakan for-of loop untuk me render semua list item (default pada tutorial menggunakan for loop)
+2. pada fungsi save input, inputBtn, dapat ditambahkan perintah untuk tidak menjalankan apa2 atau tidak mem-print, agar tidak memenuhi list dengan string kosong dengan syntax berikut :
+
+    if (inputEl.value) {
+        myLeads.push(inputEl.value)
+        inputEl.value = ""
+        localStorage.setItem("myLeads", JSON.stringify(myLeads))
+        render(myLeads)
+    } else {
+        void(0)
+    }
+
+void(0) berfungsi untuk tidak melakukan apa2 (memberikan value undefined) jika inputEl.value mempunyai value falsy (kosong)
 */
